@@ -14,10 +14,12 @@ Publisher ID supplied in the owner's AdSense screenshot: `ca-pub-112744576514884
 
 - `index.html` contains the `google-adsense-account` verification meta tag.
 - `ads.txt` is at the host root with the corresponding public publisher ID.
-- Verification does not enable advertisements. No advertising or analytics scripts are loaded on this homepage.
-- The owner must choose **Meta tag** in AdSense, verify only after deployment, and request Google's site review. Verification is not approval or a revenue guarantee.
-- Payments information, account checks, ad-unit creation and applicable consent setup are separate AdSense tasks. Do not enable ad serving before they are complete.
-- Public contact details and the live privacy policy must be reviewed before enabling ads. The linked Contact page currently offers the operator's GitHub profile; no private login email has been published.
+- Auto ads script is installed, using the exact code from the authenticated AdSense account. Google site approval is still pending (Getting ready).
+- Ownership verification and review submission were confirmed in the dashboard on 21 September 2026; payment information is received; Auto ads is On.
+- Google's European consent message is Published with Consent, Do not consent and Manage options. Its privacy URL was corrected to https://yashwant-verma.github.io/train-booking-date-calculator/privacy/ and display name to RailDate.
+- `privacy-controls.js` exposes the footer consent control after the Google CMP API becomes available. The AdSense tag deploys that published CMP; no homemade consent substitute is used.
+- The linked bilingual privacy policy describes the installed script. No private login email is published and no independent analytics tag is installed.
+- Installing the tag does not guarantee approval, ads or income. To disable advertising/CMP scripts, remove the two scripts from `index.html` and also disable the calculator project's Auto ads setting.
 
 ## Search
 
