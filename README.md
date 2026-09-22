@@ -23,6 +23,16 @@ Publisher ID supplied in the owner's AdSense screenshot: `ca-pub-112744576514884
 
 ## Search
 
-`robots.txt` points to a sitemap index covering this homepage and the calculator project's sitemap. Search Console verification and sitemap submission are separate tasks and are not claimed complete.
+`robots.txt` points to a sitemap index covering this homepage and the calculator project's sitemap. Search Console verification and submission status is recorded in the dated section below.
 
 GitHub Pages service limits and acceptable-use rules apply. This site is a free informational planning utility, with no payments or commercial SaaS features.
+
+
+## Verified setup status — 22 September 2026
+
+- Root homepage and calculator Auto ads deployments succeeded. The exact publisher script is present on the live homepage and English/Hindi calculator pages.
+- Search Console URL-prefix property `https://yashwant-verma.github.io/` was verified using the HTML tag on the homepage. Keep that tag in place.
+- Submitted `https://yashwant-verma.github.io/sitemap.xml`, covering the homepage and 16 calculator/content URLs. The report initially shows Couldn't fetch. Google live URL inspection successfully fetched the sitemap, with Crawl allowed: Yes and Page fetch: Successful; the sitemap was resubmitted once. Processing success is not yet confirmed.
+- Google accepted a homepage indexing request into its priority crawl queue. Indexing and ranking are not guaranteed.
+- AdSense still shows Getting ready (review pending) and ads.txt Not found, while the root ads.txt is publicly available with HTTP 200 and the correct publisher record. Do not delete and recreate the AdSense site merely to refresh this status.
+- No paid domain, hosting plan, runner or API was purchased. No approval or earnings are claimed.
