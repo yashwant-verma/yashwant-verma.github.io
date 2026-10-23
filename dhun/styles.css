@@ -23,7 +23,38 @@
 /* Keep the official video on screen even while scrolling the queue on phones. */
 @media(max-width:700px){
  .player-panel>.player-top{position:sticky;top:0;background:#16121f;z-index:6;flex:none}
- .player-panel>.player-body{position:sticky;top:58px;background:#16121f;z-index:5;flex:none}
+ .player-panel>.player-body{position:relative;top:auto;background:transparent;z-index:auto;flex:none;min-width:0}
  .player-panel>.queue-section{flex:none}
  .player-panel>.panel-legal{flex:none;margin-top:18px}
+}
+/* Mobile player layout correction: the YouTube API replaces the target div with
+   an iframe. A stable parent keeps its size predictable after replacement. */
+.video-shell{position:relative;width:100%;aspect-ratio:16/10;min-height:200px;overflow:hidden;border-radius:12px;background:#000;isolation:isolate}
+.video-shell #ytHost,.video-shell iframe,.video-shell .yt-host{position:absolute!important;inset:0;width:100%!important;height:100%!important;min-height:0!important;max-width:100%!important;display:block;border:0;border-radius:0}
+.player-meta .meta-left{flex:1;min-width:0}
+.queue-item{min-width:0}
+.queue-item>div{min-width:0;overflow:hidden}
+.queue-artist{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:700px){
+ .player-panel{max-height:calc(100dvh - env(safe-area-inset-top) - 12px);overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scroll-padding-top:62px;overflow-x:hidden;align-content:start}
+ .player-panel>.player-top{position:sticky;top:0;z-index:10;min-height:58px;background:#16121f;border-bottom:1px solid #292637}
+ .player-panel>.player-body{position:relative;top:auto;z-index:auto;overflow:visible;min-height:0}
+ .player-panel>.queue-section{position:relative;min-height:0;padding-top:19px;padding-bottom:12px}
+ .player-panel>.panel-legal{margin-top:8px}
+ .video-shell{max-width:480px;margin:0 auto;min-height:200px}
+ .player-meta{margin:15px 0 12px}
+ .player-meta .player-song{font-size:16px}
+ .player-meta .player-artist{font-size:11px}
+ .transport{gap:clamp(12px,4vw,23px);margin:16px 0 12px}
+ .transport button{flex:none;width:32px;height:36px}
+ .transport .main-play{width:48px;height:48px}
+ .secondary-controls{min-width:0;flex-wrap:wrap;gap:9px}
+ .watch-link{white-space:nowrap}
+ .queue-list{gap:12px}
+}
+@media(max-width:360px){
+ .player-panel{padding-left:13px;padding-right:13px}
+ .secondary-controls{justify-content:center}
+ .transport{gap:12px}
+ .video-shell{min-height:200px}
 }
