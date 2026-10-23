@@ -1,4 +1,4 @@
-const CACHE = 'dhun-shell-v1.3';
+const CACHE = 'dhun-shell-v1.4';
 const APP_ASSETS = ['./', './index.html', './styles.css', './app.js', './manifest.webmanifest', './assets/favicon.svg', './assets/icon-192.png', './assets/icon-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(APP_ASSETS)).then(() => self.skipWaiting()));
