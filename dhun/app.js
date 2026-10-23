@@ -111,12 +111,61 @@ function renderPlayer(){const t=state.current;const body=$('#playerBody');if(!t)
   <div class="player-meta"><div class="meta-left"><div class="player-song">${esc(t.title)}</div><div class="player-artist">${esc(t.artist)}</div></div><button class="heart-btn ${isLiked(t)?'liked':''}" data-action="like" data-track-id="${esc(t.id)}" title="Like song">${icon('heart')}</button></div>
   <div class="progress-wrap"><input class="progress-track" id="playbackSeek" type="range" min="0" max="100" value="0" aria-label="Seek song"/><div class="time-row"><span id="currentTime">0:00</span><span id="durationTime">0:00</span></div></div>
   <div class="transport"><button class="${state.shuffle?'active-mode':''}" data-action="shuffle" title="Shuffle">${icon('shuffle')}</button><button data-action="previous" title="Previous track">${icon('prev')}</button><button class="main-play" id="mainPlayPause" data-action="pause" title="Play/Pause">${icon('pause')}</button><button data-action="next" title="Next track">${icon('next')}</button><button class="${state.repeat?'active-mode':''}" data-action="repeat" title="Repeat this song">${icon('repeat')}</button></div>
-  <div class="secondary-controls"><span class="yt-label">${t.source==='youtube'?'<span class="yt-spot"></span>Playing from YouTube':`${icon('music')} Your device`}</span>${t.source==='youtube'?`<a class="watch-link" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/watch?v=${encodeURIComponent(t.videoId)}">Open on YouTube ${icon('external')}</a>`:'<span style="font-size:10px;color:#83768e">Offline enabled</span>'}</div>`;
+  <div class="secondary-controls"><span class="yt-label">${t.source==='youtube'?'<span class="yt-spot"></span>Playing from YouTube':`${icon('music')} Your device`}</span>${t.source==='youtube'?`<button type="button" class="watch-link fullscreen-action" data-action="fullscreen" title="Fullscreen video (landscape on phone)" aria-label="Fullscreen video; landscape on phone">${icon('maximize')}<span>Fullscreen</span></button><a class="watch-link" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/watch?v=${encodeURIComponent(t.videoId)}">Open on YouTube ${icon('external')}</a>`:'<span style="font-size:10px;color:#83768e">Offline enabled</span>'}</div>`;
  renderQueue();updatePlayingButton();
 }
 function updatePlayingButton(){const b=$('#mainPlayPause');if(b){b.dataset.action=state.isPlaying?'pause':'resume';b.innerHTML=icon(state.isPlaying?'pause':'play')}}
 function updateProgress(){if(!state.current)return;let cur=0,dur=0;try{if(state.current.source==='youtube'&&state.youtubePlayer?.getCurrentTime){cur=state.youtubePlayer.getCurrentTime()||0;dur=state.youtubePlayer.getDuration()||0}else if(state.audio){cur=state.audio.currentTime||0;dur=state.audio.duration||0}}catch{}const range=$('#playbackSeek');if(range&&!range.matches(':active'))range.value=dur?String(Math.max(0,Math.min(100,cur/dur*100))):'0';if($('#currentTime'))$('#currentTime').textContent=formatTime(cur);if($('#durationTime'))$('#durationTime').textContent=formatTime(dur)}
 function ensureYT(){if(window.YT?.Player)return Promise.resolve();if(state.ytReadyPromise)return state.ytReadyPromise;state.ytReadyPromise=new Promise((resolve,reject)=>{const existing=window.onYouTubeIframeAPIReady;window.onYouTubeIframeAPIReady=()=>{if(typeof existing==='function')existing();resolve()};const script=document.createElement('script');script.src='https://www.youtube.com/iframe_api';script.onerror=()=>{state.ytReadyPromise=null;reject(new Error('Could not load the YouTube player. Check your internet connection.'))};document.head.appendChild(script)});return state.ytReadyPromise}
+// Fullscreen: native YouTube fullscreen and our own dedicated button both request
+// landscape on phones. The dedicated button has a CSS rotation fallback when
+// browser-level orientation lock is blocked/unsupported.
+let landscapeLockHeld=false;
+function isPhoneOrTablet(){return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)||navigator.userAgentData?.mobile===true||matchMedia('(pointer:coarse)').matches}
+function fullscreenElement(){return document.fullscreenElement||document.webkitFullscreenElement||null}
+function playerFullscreenElement(){
+ const active=fullscreenElement(),shell=document.querySelector('.video-shell');
+ return active&&shell&&(active===shell||shell.contains(active)||active.contains(shell))?active:null;
+}
+function applyLandscapeFallback(){
+ const shell=document.querySelector('.video-shell');
+ if(!shell)return;
+ // Rotate only when our own wrapper is in fullscreen and the phone remains portrait.
+ shell.classList.toggle('force-landscape',Boolean(fullscreenElement()===shell&&!landscapeLockHeld&&matchMedia('(orientation:portrait)').matches&&isPhoneOrTablet()));
+}
+async function syncFullscreenOrientation(){
+ const active=playerFullscreenElement();
+ if(!active){
+  document.querySelector('.video-shell')?.classList.remove('force-landscape');
+  if(landscapeLockHeld){landscapeLockHeld=false;try{screen.orientation?.unlock?.()}catch{}}
+  return;
+ }
+ if(!isPhoneOrTablet())return;
+ if(typeof screen.orientation?.lock==='function'){
+  try{
+   await screen.orientation.lock('landscape');
+   if(!playerFullscreenElement())return;
+   landscapeLockHeld=true;
+  }catch(err){
+   // Some browsers/embedded players reject orientation lock; use rotated
+   // wrapper for our own fullscreen button when supported by CSS.
+   landscapeLockHeld=false;
+   console.info('Landscape orientation lock unavailable:',err?.name||err);
+  }
+ }
+ applyLandscapeFallback();
+}
+function enterVideoFullscreen(){
+ const shell=document.querySelector('.video-shell');
+ if(!shell){toast('Play a YouTube video to enter fullscreen');return}
+ if(fullscreenElement())return;
+ const request=shell.requestFullscreen||shell.webkitRequestFullscreen;
+ if(!request){toast('Use the YouTube fullscreen control on this browser');return}
+ try{
+  const result=request.call(shell);
+  if(result&&typeof result.catch==='function')result.catch(()=>toast('Fullscreen was blocked by your browser. Try the YouTube control.'));
+ }catch(err){toast('Fullscreen is not available here. Try the YouTube control.')}
+}
 async function beginYT(t,nonce){try{await ensureYT();if(nonce!==state.playNonce)return;state.youtubePlayer=new YT.Player('ytHost',{height:'100%',width:'100%',videoId:t.videoId,playerVars:{autoplay:1,playsinline:1,controls:1,rel:0,origin:location.origin},events:{onReady:e=>{if(nonce!==state.playNonce)return;try{e.target.playVideo()}catch{}},onStateChange:e=>{if(nonce!==state.playNonce)return;if(e.data===YT.PlayerState.ENDED){state.isPlaying=false;updatePlayingButton();if(state.repeat){playTrack(t,{keepQueue:true})}else nextTrack()}else if(e.data===YT.PlayerState.PLAYING){state.isPlaying=true;updatePlayingButton()}else if(e.data===YT.PlayerState.PAUSED){state.isPlaying=false;updatePlayingButton()}},onError:e=>{if(nonce!==state.playNonce)return;toast(e.data===101||e.data===150?'This video blocks embedded playback. Open it on YouTube.':'Video could not be played. Try another track.');state.isPlaying=false;updatePlayingButton()},onAutoplayBlocked:()=>{if(nonce===state.playNonce){toast('Tap play in the YouTube player to start');state.isPlaying=false;updatePlayingButton()}}}})}catch(err){if(nonce===state.playNonce){state.isPlaying=false;updatePlayingButton();toast(err.message)}}}
 function dbOpen(){return new Promise((resolve,reject)=>{if(!('indexedDB'in window)){reject(new Error('Local music storage is not supported on this browser'));return}const req=indexedDB.open('dhun_local_music',1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('tracks'))req.result.createObjectStore('tracks',{keyPath:'id'})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
 async function dbAll(){const db=await dbOpen();return new Promise((resolve,reject)=>{const tx=db.transaction('tracks','readonly');const req=tx.objectStore('tracks').getAll();req.onsuccess=()=>{db.close();resolve(req.result)};req.onerror=()=>{db.close();reject(req.error)}})}
@@ -163,6 +212,7 @@ function handleAction(action,btn){const t=registered.get(btn.dataset.trackId);
  case 'load-more':if(state.searchTerm)doSearch(state.searchTerm,true);break;
  case 'pause':pausePlayback();break;
  case 'resume':resumePlayback();break;
+  case 'fullscreen':enterVideoFullscreen();break;
  case 'next':nextTrack();break;
  case 'previous':previousTrack();break;
  case 'repeat':state.repeat=!state.repeat;btn.classList.toggle('active-mode',state.repeat);break;
@@ -185,6 +235,10 @@ function handleAction(action,btn){const t=registered.get(btn.dataset.trackId);
  }
 }
 function bindEvents(){
+  document.addEventListener('fullscreenchange',syncFullscreenOrientation);
+  document.addEventListener('webkitfullscreenchange',syncFullscreenOrientation);
+  window.addEventListener('resize',applyLandscapeFallback);
+  screen.orientation?.addEventListener?.('change',applyLandscapeFallback);
  document.addEventListener('click',event=>{
    const action=event.target.closest('[data-action]');if(action){event.preventDefault();event.stopPropagation();handleAction(action.dataset.action,action);return}
    const p=event.target.closest('[data-playlist-id]');if(p){setView('playlist:'+p.dataset.playlistId);return}
