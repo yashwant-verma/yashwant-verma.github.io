@@ -58,3 +58,27 @@
  .transport{gap:12px}
  .video-shell{min-height:200px}
 }
+
+/* Fullscreen video stretches edge to edge on desktop or landscape phones. */
+.secondary-controls{flex-wrap:wrap}
+.fullscreen-action{font-family:inherit;font-weight:700;cursor:pointer;background:#231a34;border-color:#71549a;color:#dfcbff}
+.fullscreen-action:hover{background:#35234f;color:#fff;border-color:#b58cff}
+.fullscreen-action .ic{width:14px;height:14px}
+.video-shell:fullscreen,.video-shell:-webkit-full-screen{
+ width:100vw!important;height:100dvh!important;max-width:none!important;max-height:none!important;
+ min-height:0!important;aspect-ratio:auto!important;margin:0!important;border-radius:0!important;
+ background:#000!important;overflow:hidden!important;
+}
+.video-shell:fullscreen::backdrop{background:#000}
+@media(orientation:portrait){
+ /* Fallback when Android/iOS browser denies orientation.lock('landscape'). */
+ .video-shell.force-landscape:fullscreen,.video-shell.force-landscape:-webkit-full-screen{
+  position:fixed!important;inset:auto!important;left:50%!important;top:50%!important;
+  width:100dvh!important;height:100vw!important;max-width:none!important;max-height:none!important;
+  transform:translate(-50%,-50%) rotate(90deg)!important;transform-origin:center center!important;
+ }
+}
+@media(max-width:380px){
+ .secondary-controls{gap:9px}
+ .fullscreen-action{flex:1;justify-content:center}
+}
