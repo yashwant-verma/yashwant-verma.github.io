@@ -1,0 +1,16 @@
+{
+  "name": "dhun. — Feel every beat",
+  "short_name": "dhun.",
+  "description": "Your own installable music discovery app with YouTube search and local music.",
+  "id": "./",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b0b14",
+  "theme_color": "#0b0b14",
+  "orientation": "any",
+  "icons": [
+    {"src":"./assets/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"./assets/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}
