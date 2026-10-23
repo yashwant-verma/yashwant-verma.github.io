@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0b14" />
+  <meta name="description" content="Dhun — discover music from YouTube, build playlists, and play your own music in an installable app." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="dhun." />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./assets/icon-192.png" />
+  <title>dhun. — Feel every beat</title>
+  <link rel="preconnect" href="https://i.ytimg.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon-defs" aria-hidden="true">
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="7.3"/><path d="m16.2 16.2 5 5"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.3 8.7-2.2 4.4-4.4 2.2 2.2-4.4z"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.5 4.9a5.5 5.5 0 0 0-7.8 0l-.7.7-.7-.7a5.5 5.5 0 0 0-7.8 7.8L12 21l8.5-8.3a5.5 5.5 0 0 0 0-7.8z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h12M9 12h12M9 18h12"/><path d="M3 6h1M3 12h1M3 18h1"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="m20 13.5.5-3-2.4-.8-.8-1.9 1.1-2.3-2.5-1.7-1.8 1.7h-2.2L10 3.8 7.5 5.5l1.1 2.3-.8 1.9-2.4.8.5 3 2.4.4.9 2-1.3 2.2 2.5 1.7 1.9-1.7h2.2l1.8 1.7 2.5-1.7-1.2-2.3.8-1.9z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 12 7-12 7z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 5h3v14H7zM14 5h3v14h-3z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="m5 5 11 7-11 7z"/><path d="M19 5v14"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><path d="m19 5-11 7 11 7z"/><path d="M5 5v14"/></symbol>
+    <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M3 6h3c5 0 6 12 11 12h4m-4-4 4 4-4 4M3 18h3c2 0 3-2 4-4m2-4c1.5-2 2.6-4 5-4h4m-4-4 4 4-4 4"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M17 2l4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4m14-1v2a3 3 0 0 1-3 3H3"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M12 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M13 3h8v8M21 3 10 14"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="m5 5 14 14M19 5 5 19"/></symbol>
+    <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="m12 2 2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2zM20 18l.7 1.3L22 20l-1.3.7L20 22l-.7-1.3L18 20l1.3-.7z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-7-7 7 7-7 7"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 16v4h16v-4"/></symbol>
+    <symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 13v-2a8 8 0 0 1 16 0v2M4 13h4v8H6a2 2 0 0 1-2-2zm12 0h4v6a2 2 0 0 1-2 2h-2z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3m3 0-1 14H7L6 7m4 4v6m4-6v6"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7h.01"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M4 18v3h16v-3"/></symbol>
+  </svg>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="logo-wrap"><a class="logo" href="#home" data-view="home"><span class="logo-mark"><span></span><span></span><span></span></span>dhun<span class="logo-dot">.</span></a><span class="logo-sub">YOUR MUSIC UNIVERSE</span></div>
+      <div class="sidebar-body">
+        <p class="nav-label">MENU</p>
+        <nav class="primary-nav" aria-label="Main navigation">
+          <button class="nav-item active" data-view="home"><svg class="ic"><use href="#i-home"/></svg><span>Home</span></button>
+          <button class="nav-item" data-view="search"><svg class="ic"><use href="#i-compass"/></svg><span>Discover</span></button>
+          <button class="nav-item" data-view="liked"><svg class="ic"><use href="#i-heart"/></svg><span>Liked songs</span><span class="nav-count" id="likedCount"></span></button>
+          <button class="nav-item" data-view="recent"><svg class="ic"><use href="#i-clock"/></svg><span>Recently played</span></button>
+          <button class="nav-item" data-view="local"><svg class="ic"><use href="#i-folder"/></svg><span>On your device</span></button>
+        </nav>
+        <div class="playlist-label-row"><p class="nav-label">YOUR PLAYLISTS</p><button class="icon-btn subtle" id="createPlaylistSide" aria-label="Create playlist" title="Create playlist"><svg class="ic"><use href="#i-plus"/></svg></button></div>
+        <div id="playlistNav" class="playlists-nav"></div>
+        <button class="new-playlist" id="newPlaylist"><svg class="ic"><use href="#i-plus"/></svg> Create playlist</button>
+      </div>
+      <div class="sidebar-bottom">
+        <div class="upgrade-box"><span class="upgrade-spark"><svg class="ic"><use href="#i-sparkles"/></svg></span><strong>Make it yours</strong><span>Connect YouTube to search millions of songs.</span><button id="connectButton">Connect YouTube <svg class="ic"><use href="#i-arrow"/></svg></button></div>
+        <button class="nav-item settings-item" id="settingsButton"><svg class="ic"><use href="#i-settings"/></svg><span>Settings</span></button>
+      </div>
+    </aside>
+
+    <main class="main-area" id="mainArea">
+      <header class="topbar"><button class="icon-btn mobile-menu" id="menuToggle" aria-label="Open navigation"><svg class="ic"><use href="#i-menu"/></svg></button>
+        <div class="search-wrapper"><svg class="ic"><use href="#i-search"/></svg><input id="searchInput" type="search" aria-label="Search music" placeholder="Search songs, artists, playlists..." autocomplete="off" /><kbd>/</kbd></div>
+        <div class="topbar-actions"><span class="online-pill"><span></span> GOOD VIBES ONLY</span><button class="icon-btn top-settings" id="topSettings" title="Settings" aria-label="Settings"><svg class="ic"><use href="#i-settings"/></svg></button><button class="install-btn" id="installButton"><svg class="ic"><use href="#i-download"/></svg><span>Install app</span></button><div class="avatar" aria-label="Your profile">D</div></div>
+      </header>
+      <div id="content" class="content"></div>
+      <footer class="app-footer"><span>Made for the love of music <span class="footer-heart">♥</span></span><span>Music from YouTube uses the official player. YouTube may show ads.</span></footer>
+    </main>
+
+    <aside class="player-panel" id="playerPanel" aria-label="Now playing">
+      <div class="player-top"><div class="player-panel-heading"><span class="heading-dot"></span><span>NOW PLAYING</span></div><button class="icon-btn close-player" id="closePlayer" aria-label="Close and stop player"><svg class="ic"><use href="#i-x"/></svg></button></div>
+      <div class="player-body" id="playerBody">
+        <div class="empty-player"><div class="empty-player-graphic"><svg class="ic"><use href="#i-headphones"/></svg></div><h3>Nothing playing yet</h3><p>Pick a track and let the music take over.</p></div>
+      </div>
+      <div class="queue-section"><div class="queue-heading"><h3>Up next</h3><button id="clearQueue" class="text-btn">Clear</button></div><div id="queueList" class="queue-list"></div></div>
+      <div class="panel-legal">Streaming via <strong>YouTube</strong> · Playback requires internet</div>
+    </aside>
+  </div>
+
+  <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+    <button data-view="home" class="active"><svg class="ic"><use href="#i-home"/></svg><span>Home</span></button>
+    <button data-view="search"><svg class="ic"><use href="#i-search"/></svg><span>Search</span></button>
+    <button data-view="liked"><svg class="ic"><use href="#i-heart"/></svg><span>Liked</span></button>
+    <button data-view="local"><svg class="ic"><use href="#i-folder"/></svg><span>Library</span></button>
+  </nav>
+  <div id="mobilePlayerBackdrop" class="mobile-player-backdrop" hidden></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="modalRoot"></div>
+  <input type="file" id="localFilesInput" accept="audio/*,.mp3,.m4a,.wav,.ogg,.flac,.aac" multiple hidden />
+  <script src="./app.js" defer></script>
+</body>
+</html>
